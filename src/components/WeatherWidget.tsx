@@ -103,7 +103,7 @@ export default function WeatherWidget() {
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reduceMotion ? 0.01 : 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-      className="relative z-50 flex items-center justify-center h-9 border-b border-border/40 bg-background/80 backdrop-blur-sm"
+      className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-center h-9 border-b border-border/40 bg-background/80 backdrop-blur-sm"
     >
       {loading ? (
         <Loader2 className="w-3 h-3 text-foreground-subtle animate-spin" />

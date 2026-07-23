@@ -12,7 +12,7 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
+    <header className="fixed top-9 left-0 right-0 z-50">
       <div className="mx-auto max-w-5xl px-6 pt-4">
         <motion.nav
           className="flex items-center justify-between px-5 py-2.5 bg-card/80 backdrop-blur-xl border border-border/50 rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_4px_rgba(0,0,0,0.25)]"

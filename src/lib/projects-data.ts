@@ -161,31 +161,4 @@ export const projectsData = [
       { label: "Drop Success", value: "100%" }
     ]
   },
-  {
-    slug: "portfolio",
-    name: "Portfolio Website",
-    subtitle: "Personal Brand",
-    summary: "A premium personal portfolio showcasing frontend engineering expertise and product design capabilities with modern interactions.",
-    category: "Personal Brand",
-    techStack: ["Next.js", "React", "TypeScript", "TailwindCSS", "Framer Motion", "GSAP", "Lenis"],
-    role: "Frontend Developer & Designer",
-    duration: "1 Month",
-    problem: "Traditional portfolios often fail to demonstrate both design thinking and engineering excellence simultaneously.",
-    solution: "Created a product-like portfolio experience with bento grid layouts, smooth animations, and interactive elements.",
-    challenges: "Balancing visual appeal with performance, implementing complex animations while maintaining accessibility.",
-    features: [
-      "Bento Grid Layout",
-      "Smooth Scroll Experience",
-      "Interactive Components",
-      "Performance Optimized"
-    ],
-    liveUrl: "https://elpresidentey.vercel.app",
-    githubUrl: "https://github.com/elpresidentey/portfolio.git",
-    imageUrl: "/images/projects/portfolio.png",
-    stats: [
-      { label: "Lighthouse Score", value: "95+" },
-      { label: "Page Load", value: "<1s" },
-      { label: "Interactions", value: "15+" }
-    ]
-  },
-  ];
+];

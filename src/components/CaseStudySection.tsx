@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion, useMotionValue, useSpring, useTransform as useMotionTransform } from 'framer-motion';
 import {
-  ArrowUpRight, ExternalLink, Gauge, Zap, DollarSign, Timer,
+  ArrowUpRight, ExternalLink, Gauge, Zap, DollarSign,
   Activity, MapPin, LayoutDashboard, WifiOff,
   Monitor, Map, Brain, BarChart3, Bell,
   ChevronRight

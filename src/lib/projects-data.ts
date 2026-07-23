@@ -188,31 +188,4 @@ export const projectsData = [
       { label: "Interactions", value: "15+" }
     ]
   },
-  {
-    slug: "ui-components",
-    name: "UI Components Library",
-    subtitle: "Design System",
-    summary: "A comprehensive component library featuring reusable, accessible UI components with consistent design patterns.",
-    category: "Component Library",
-    techStack: ["React", "TypeScript", "TailwindCSS", "Storybook", "Framer Motion"],
-    role: "Frontend Developer & Designer",
-    duration: "2 Months",
-    problem: "Teams often struggle with inconsistent UI patterns and lack of reusable components across projects.",
-    solution: "Built a modular component library with documentation, variants, and accessibility-first design principles.",
-    challenges: "Creating flexible components that work across different use cases while maintaining consistency.",
-    features: [
-      "50+ Components",
-      "Accessibility First",
-      "Theme Support",
-      "Storybook Docs"
-    ],
-    liveUrl: "https://ui-components.vercel.app",
-    githubUrl: "https://github.com/elpresidentey/ui-components.git",
-    imageUrl: "/images/projects/ui-components.png",
-    stats: [
-      { label: "Components", value: "50+" },
-      { label: "Downloads", value: "1,000+" },
-      { label: "Projects Used", value: "8+" }
-    ]
-  }
-];
+  ];

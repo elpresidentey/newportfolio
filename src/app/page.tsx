@@ -23,22 +23,21 @@ const LinkedinIcon = () => (
 );
 
 function IntroScreen({ onComplete }: { onComplete: () => void }) {
-  const reduceMotion = useReducedMotion();
   const ease = [0.22, 1, 0.36, 1] as const;
-  const [phase, setPhase] = useState<'enter' | 'exit'>('enter');
+  const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    if (reduceMotion) { onComplete(); return; }
-    const t = setTimeout(() => setPhase('exit'), 5000);
-    return () => clearTimeout(t);
+    // Phase 1: after 5s, start CSS fade-out
+    const fader = setTimeout(() => setFading(true), 5000);
+    // Phase 2: after 5.7s, fully done
+    const done = setTimeout(onComplete, 5700);
+    return () => { clearTimeout(fader); clearTimeout(done); };
   }, []);
 
   return (
-    <motion.div
+    <div
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 bg-background"
-      animate={phase === 'exit' ? { opacity: 0, scale: 0.95, filter: 'blur(4px)' } : { opacity: 1, scale: 1, filter: 'blur(0px)' }}
-      transition={{ duration: 0.7, ease }}
-      onAnimationComplete={() => { if (phase === 'exit') onComplete(); }}
+      style={{ opacity: fading ? 0 : 1, transition: 'opacity 0.7s cubic-bezier(0.22,1,0.36,1)' }}
     >
       {/* Background glow */}
       <motion.div
@@ -55,13 +54,9 @@ function IntroScreen({ onComplete }: { onComplete: () => void }) {
           <motion.span
             key={letter}
             className="block text-[clamp(3rem,7vw,5rem)] font-semibold tracking-tight text-foreground"
-            initial={{ y: '150%', opacity: 0, filter: 'blur(12px)' }}
-            animate={{ y: '0%', opacity: 1, filter: 'blur(0px)' }}
-            transition={{
-              duration: 1.2,
-              ease,
-              delay: reduceMotion ? 0 : 0.4 + i * 0.28,
-            }}
+            initial={{ y: '150%', opacity: 0 }}
+            animate={{ y: '0%', opacity: 1 }}
+            transition={{ duration: 1.2, ease, delay: 0.4 + i * 0.28 }}
           >
             {letter}
           </motion.span>
@@ -70,11 +65,7 @@ function IntroScreen({ onComplete }: { onComplete: () => void }) {
           className="text-[clamp(3rem,7vw,5rem)] font-semibold tracking-tight text-accent"
           initial={{ scale: 0, rotate: -180, opacity: 0 }}
           animate={{ scale: 1, rotate: 0, opacity: 1 }}
-          transition={{
-            duration: 0.8,
-            ease: [0.34, 1.56, 0.64, 1],
-            delay: reduceMotion ? 0 : 1.5,
-          }}
+          transition={{ duration: 0.8, ease: [0.34, 1.56, 0.64, 1], delay: 1.5 }}
         >
           .
         </motion.span>
@@ -86,39 +77,31 @@ function IntroScreen({ onComplete }: { onComplete: () => void }) {
           className="h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"
           initial={{ width: 0, opacity: 0 }}
           animate={{ width: 260, opacity: 1 }}
-          transition={{ duration: 1.4, ease, delay: reduceMotion ? 0 : 2.1 }}
+            transition={{ duration: 1.4, ease, delay: 2.1 }}
         />
-        <motion.div
-          className="absolute w-[200px] h-6 rounded-full bg-accent/20"
-          initial={{ width: 0, opacity: 0 }}
-          animate={{ width: 200, opacity: 1 }}
-          transition={{ duration: 1.4, ease, delay: reduceMotion ? 0 : 2.1 }}
-          style={{ filter: 'blur(24px)' }}
-        />
+        <div className="absolute w-[200px] h-6 rounded-full bg-accent/20" style={{ filter: 'blur(24px)' }} />
       </div>
 
       {/* Subtitle */}
       <motion.p
         className="text-xs tracking-[0.15em] uppercase text-foreground-muted text-center leading-relaxed font-medium"
-        initial={{ opacity: 0, y: 16, letterSpacing: '0.4em' }}
-        animate={{ opacity: 1, y: 0, letterSpacing: '0.12em' }}
-        transition={{ duration: 1.2, ease, delay: reduceMotion ? 0 : 2.8 }}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2, ease, delay: 2.8 }}
       >
         Frontend Engineer<span className="mx-1.5 text-foreground-subtle/30">·</span>Product Thinker<span className="mx-1.5 text-foreground-subtle/30">·</span>UX Designer
       </motion.p>
-    </motion.div>
+    </div>
   );
 }
 
 export default function Page() {
   const [showIntro, setShowIntro] = useState(true);
-  const [showContent, setShowContent] = useState(false);
   const reduceMotion = useReducedMotion();
   const rafId = useRef<number | null>(null);
 
   const handleIntroDone = useCallback(() => {
-    setShowContent(true);
-    setTimeout(() => setShowIntro(false), 200);
+    setShowIntro(false);
   }, []);
 
   useEffect(() => {
@@ -158,7 +141,7 @@ export default function Page() {
       {/* Main content — fades in smoothly */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: showContent ? 1 : 0 }}
+        animate={{ opacity: !showIntro ? 1 : 0 }}
         transition={{ duration: 0.5, ease }}
       >
         <WeatherWidget />

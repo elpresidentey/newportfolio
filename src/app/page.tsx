@@ -25,41 +25,57 @@ const LinkedinIcon = () => (
 function IntroScreen({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const ease = [0.22, 1, 0.36, 1] as const;
-  const dur = reduceMotion ? 0.01 : 1.5;
+  const dur = reduceMotion ? 0.01 : 0.8;
+
+  useEffect(() => {
+    if (reduceMotion) { onComplete(); return; }
+    const t = setTimeout(onComplete, 3000);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-background"
-      exit={{ opacity: 0 }}
-      transition={{ duration: reduceMotion ? 0.01 : 0.5, ease }}
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-5 bg-background"
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.5, ease }}
     >
-      <div className="overflow-hidden">
+      <div className="overflow-hidden flex">
+        {['I', 'E', 'L'].map((letter, i) => (
+          <motion.span
+            key={letter}
+            className="block text-[clamp(2.5rem,6vw,4rem)] font-semibold tracking-tight text-foreground"
+            initial={{ y: '120%' }}
+            animate={{ y: '0%' }}
+            transition={{ duration: dur, ease, delay: reduceMotion ? 0 : i * 0.18 }}
+          >
+            {letter}
+          </motion.span>
+        ))}
         <motion.span
-          className="block text-[clamp(28px,5vw,48px)] font-medium tracking-tight text-foreground"
-          initial={{ y: '110%' }}
-          animate={{ y: '0%' }}
-          transition={{ duration: dur, ease }}
-          onAnimationComplete={onComplete}
+          className="text-[clamp(2.5rem,6vw,4rem)] font-semibold tracking-tight text-accent"
+          initial={{ scale: 0, rotate: -90 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1], delay: reduceMotion ? 0 : 0.6 }}
         >
-          IEL<span className="text-accent">.</span>
+          .
         </motion.span>
       </div>
 
       <motion.div
-        className="h-px bg-foreground"
-        initial={{ width: 0 }}
-        animate={{ width: 200 }}
-        transition={{ duration: dur, ease, delay: reduceMotion ? 0 : 0.3 }}
+        className="h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent"
+        initial={{ width: 0, opacity: 0 }}
+        animate={{ width: 200, opacity: 1 }}
+        transition={{ duration: dur * 0.8, ease, delay: reduceMotion ? 0 : 1 }}
       />
 
-      <motion.span
-        className="text-xs tracking-[0.12em] uppercase text-foreground-muted text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: reduceMotion ? 0.01 : 1.2, ease, delay: reduceMotion ? 0 : 0.8 }}
+      <motion.p
+        className="text-xs tracking-[0.12em] uppercase text-foreground-muted text-center leading-relaxed"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: dur * 0.7, ease, delay: reduceMotion ? 0 : 1.5 }}
       >
-        Frontend Engineer, Product Thinker and User Experience Designer
-      </motion.span>
+        Frontend Engineer<span className="mx-1.5 text-foreground-subtle/30">·</span>Product Thinker<span className="mx-1.5 text-foreground-subtle/30">·</span>UX Designer
+      </motion.p>
     </motion.div>
   );
 }
@@ -101,17 +117,20 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-background text-foreground font-sans antialiased bg-noise">
       <AnimatePresence>
-        {!introDone && <IntroScreen onComplete={() => setTimeout(() => setIntroDone(true), 3000)} />}
+        {!introDone && <IntroScreen onComplete={() => setIntroDone(true)} />}
       </AnimatePresence>
 
       {introDone && (
-        <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, ease }}
+        >
           <WeatherWidget />
           <Header />
 
           {/* Hero */}
           <section className="relative min-h-[88vh] flex items-center px-6 overflow-hidden">
-            {/* Background orbs */}
             <div className="gradient-orb w-[600px] h-[600px] bg-accent -top-48 -right-48" />
             <div className="gradient-orb w-[400px] h-[400px] bg-accent bottom-0 -left-48" style={{ opacity: 0.04 }} />
 
@@ -151,16 +170,28 @@ export default function Page() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduceMotion ? 0.01 : 0.8, ease, delay: 0.15 }}
               >
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-accent bg-accent/10 border border-accent/15 rounded-full">
+                <motion.span
+                  className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-accent bg-accent/10 border border-accent/15 rounded-full"
+                  whileHover={{ scale: 1.04 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                   HNG 14 · Stage 4 Finalist
-                </span>
-                <span className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-foreground-muted bg-muted border border-border/50 rounded-full">
+                </motion.span>
+                <motion.span
+                  className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-foreground-muted bg-muted border border-border/50 rounded-full"
+                  whileHover={{ scale: 1.04 }}
+                  transition={{ duration: 0.2 }}
+                >
                   2.6 yrs · Frontend Web
-                </span>
-                <span className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-foreground-muted bg-muted border border-border/50 rounded-full">
+                </motion.span>
+                <motion.span
+                  className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-foreground-muted bg-muted border border-border/50 rounded-full"
+                  whileHover={{ scale: 1.04 }}
+                  transition={{ duration: 0.2 }}
+                >
                   Next.js · React · TypeScript
-                </span>
+                </motion.span>
               </motion.div>
 
               <motion.p
@@ -178,26 +209,34 @@ export default function Page() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduceMotion ? 0.01 : 0.8, ease, delay: 0.45 }}
               >
-                <a href="#work" className="btn btn-primary">
+                <motion.a href="#work" className="btn btn-primary"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
                   View Projects
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
                   </svg>
-                </a>
-                <a href="#contact" className="btn btn-ghost">
+                </motion.a>
+                <motion.a href="#contact" className="btn btn-ghost"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
                   Get in Touch
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                   href="/resume.pdf"
                   download
                   className="btn btn-ghost"
                   aria-label="Download resume"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                   </svg>
                   Resume
-                </a>
+                </motion.a>
               </motion.div>
             </div>
           </section>
@@ -240,56 +279,64 @@ export default function Page() {
                 transition={{ duration: reduceMotion ? 0.01 : 0.8, ease, delay: 0.1 }}
               >
                 <div className="flex flex-wrap items-center gap-3">
-                  <a
+                  <motion.a
                     href="mailto:conceptsandcontexts@gmail.com"
                     className="btn btn-primary"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
                   >
                     Send an email
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                     </svg>
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href="/resume.pdf"
                     download
                     className="btn btn-ghost"
                     aria-label="Download resume"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
                     Download Resume
-                  </a>
+                  </motion.a>
                 </div>
 
                 <div className="flex items-center gap-6 pt-4">
-                  <a
+                  <motion.a
                     href="https://github.com/elpresidentey"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground transition-colors duration-200"
                     aria-label="GitHub profile"
+                    whileHover={{ x: 2 }}
+                    transition={{ duration: 0.2 }}
                   >
                     <GithubIcon />
                     <span className="font-medium">GitHub</span>
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href="https://www.linkedin.com/in/iduwe-leonard-a84905227"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground transition-colors duration-200"
                     aria-label="LinkedIn profile"
+                    whileHover={{ x: 2 }}
+                    transition={{ duration: 0.2 }}
                   >
                     <LinkedinIcon />
                     <span className="font-medium">LinkedIn</span>
-                  </a>
+                  </motion.a>
                 </div>
               </motion.div>
             </div>
           </section>
 
           <Footer />
-        </>
+        </motion.div>
       )}
     </main>
   );

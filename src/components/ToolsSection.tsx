@@ -75,21 +75,21 @@ export default function ToolsSection() {
       {/* Category grid — desktop */}
       <div className="container-main hidden sm:grid grid-cols-5 gap-4 mb-12">
         {toolCategories.map((cat, ci) => (
-          <motion.div
-            key={cat.label}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: reduceMotion ? 0.01 : 0.5, ease: [0.22, 1, 0.36, 1], delay: reduceMotion ? 0 : ci * 0.06 }}
-            className="bg-card card-glow rounded-xl p-4 hover:-translate-y-0.5 transition-all duration-300"
-          >
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-accent">{cat.label}</span>
-            <div className="mt-3 space-y-1.5">
-              {cat.tools.map((tool) => (
-                <span key={tool} className="block text-xs text-foreground-muted font-mono">{tool}</span>
-              ))}
-            </div>
-          </motion.div>
+            <motion.div
+              key={cat.label}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: reduceMotion ? 0.01 : 0.5, ease: [0.22, 1, 0.36, 1], delay: reduceMotion ? 0 : ci * 0.06 }}
+              className="bg-card card-glow rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)]"
+            >
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-accent">{cat.label}</span>
+              <div className="mt-3 space-y-1.5">
+                {cat.tools.map((tool) => (
+                  <span key={tool} className="block text-xs text-foreground-muted font-mono transition-colors duration-200 hover:text-accent">{tool}</span>
+                ))}
+              </div>
+            </motion.div>
         ))}
       </div>
 

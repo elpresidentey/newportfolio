@@ -80,12 +80,20 @@ function AnimatedStat({ value, label, icon: Icon }: { value: string; label: stri
 
   return (
     <div ref={ref} className="text-center sm:text-left group">
-      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent mb-3 group-hover:scale-110 transition-transform duration-300">
+      <motion.div
+        className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent mb-3"
+        whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
+        transition={{ duration: 0.3 }}
+      >
         <Icon className="w-5 h-5" />
-      </div>
-      <span className="block text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+      </motion.div>
+      <motion.span
+        className="block text-3xl sm:text-4xl font-bold tracking-tight text-foreground"
+        whileHover={{ scale: 1.04 }}
+        transition={{ duration: 0.2 }}
+      >
         {sign}{displayed}{suffix}
-      </span>
+      </motion.span>
       <span className="block mt-1 text-xs font-medium text-foreground-muted">{label}</span>
     </div>
   );
@@ -123,7 +131,8 @@ export default function CaseStudySection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: reduceMotion ? 0.01 : 0.6, ease }}
-            className="relative overflow-hidden bg-gradient-to-br from-accent/10 via-accent/5 to-background border border-accent/15 rounded-2xl p-8 sm:p-12"
+            whileHover={{ scale: 1.005 }}
+            className="relative overflow-hidden bg-gradient-to-br from-accent/10 via-accent/5 to-background border border-accent/15 rounded-2xl p-8 sm:p-12 transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(245,158,11,0.06)]"
           >
             <div className="gradient-orb w-64 h-64 bg-accent -top-20 -right-20 opacity-20" />
             <div className="relative z-10">

@@ -38,26 +38,30 @@ export default function Footer() {
           transition={{ duration: reduceMotion ? 0.01 : 0.6, ease, delay: 0.1 }}
           className="flex gap-4"
         >
-          <a
+          <motion.a
             href="https://github.com/elpresidentey"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs text-foreground-subtle hover:text-accent transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
             aria-label="GitHub profile"
+            whileHover={{ scale: 1.05, x: 2 }}
+            transition={{ duration: 0.2 }}
           >
             <GithubIcon />
             <span>GitHub</span>
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="https://www.linkedin.com/in/iduwe-leonard-a84905227"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs text-foreground-subtle hover:text-accent transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
             aria-label="LinkedIn profile"
+            whileHover={{ scale: 1.05, x: 2 }}
+            transition={{ duration: 0.2 }}
           >
             <LinkedinIcon />
             <span>LinkedIn</span>
-          </a>
+          </motion.a>
         </motion.div>
       </div>
     </footer>

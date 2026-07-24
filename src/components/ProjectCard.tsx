@@ -46,15 +46,43 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
     >
       {/* Top accent line */}
       <div
-        className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--card-accent)] opacity-60 group-hover:opacity-100 transition-opacity duration-500"
+        className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--card-accent)] opacity-60 group-hover:opacity-100 transition-opacity duration-500 z-10"
       />
+
+      {/* Preview area */}
+      <div className="relative h-36 sm:h-44 bg-gradient-to-br from-[var(--card-accent)]/5 via-background to-background border-b border-border/40 overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.04]">
+          <svg className="w-32 h-32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm3 3h8v2H8V8zm0 4h8v2H8v-2zm0 4h5v2H8v-2z" />
+          </svg>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+        <motion.div
+          className="absolute top-3 left-3 flex gap-1.5"
+          initial={false}
+        >
+          <span className="w-2 h-2 rounded-full bg-red-400/60" />
+          <span className="w-2 h-2 rounded-full bg-amber-400/60" />
+          <span className="w-2 h-2 rounded-full bg-green-400/60" />
+        </motion.div>
+        <div className="absolute bottom-3 left-3 right-3 flex gap-1.5">
+          <motion.div
+            className="h-1.5 rounded-full bg-[var(--card-accent)]/30"
+            initial={{ width: '40%' }}
+            whileHover={{ width: '70%' }}
+            transition={{ duration: 0.3 }}
+          />
+          <div className="h-1.5 w-1/4 rounded-full bg-border/50" />
+          <div className="h-1.5 w-1/5 rounded-full bg-border/50" />
+        </div>
+      </div>
 
       <a
         href={project.liveUrl || project.githubUrl || '#'}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`View ${project.name} project`}
-        className="flex flex-col h-full p-6 sm:p-7 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+        className="flex flex-col h-full p-6 sm:p-7 pt-5 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
       >
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
@@ -76,9 +104,9 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 
         {/* Stats */}
         {project.stats && project.stats.length > 0 && (
-          <div className="mt-5 grid grid-cols-3 gap-3">
+          <div className="mt-4 grid grid-cols-3 gap-3">
             {project.stats.slice(0, 3).map((s) => (
-              <div key={s.label} className="bg-muted/40 border border-border/30 rounded-lg px-3 py-2.5">
+              <div key={s.label} className="bg-muted/40 border border-border/30 rounded-lg px-3 py-2.5 group-hover:bg-card-hover transition-colors duration-300">
                 <span className="block text-base font-semibold text-foreground tracking-tight">{s.value}</span>
                 <span className="block text-[11px] text-foreground-subtle mt-0.5">{s.label}</span>
               </div>
@@ -90,12 +118,12 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         <div className="flex-1" />
 
         {/* Bottom */}
-        <div className="mt-5 pt-4 border-t border-border/40">
+        <div className="mt-4 pt-4 border-t border-border/40">
           <div className="flex flex-wrap items-center gap-1.5 mb-3">
             {project.techStack.slice(0, 4).map((tech) => (
               <span
                 key={tech}
-                className="px-2 py-0.5 text-[10px] font-mono text-foreground-subtle bg-muted/60 border border-border/30 rounded-md transition-colors duration-200 hover:border-[var(--card-accent)]/20 hover:text-[var(--card-accent)]"
+                className="px-2 py-0.5 text-[10px] font-mono text-foreground-subtle bg-muted/60 border border-border/30 rounded-md transition-all duration-200 hover:border-[var(--card-accent)]/20 hover:text-[var(--card-accent)] hover:scale-105"
               >
                 {tech}
               </span>
@@ -111,13 +139,18 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             <span className="text-[11px] text-foreground-subtle/70">{project.duration}</span>
             <div className="flex items-center gap-2">
               {project.githubUrl && (
-                <span className="text-foreground-subtle/50 hover:text-[var(--card-accent)] transition-colors duration-200 p-1 rounded" aria-label="Source code">
+                <motion.span
+                  className="text-foreground-subtle/50 hover:text-[var(--card-accent)] transition-colors duration-200 p-1 rounded"
+                  aria-label="Source code"
+                  whileHover={{ scale: 1.15 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <GithubIcon />
-                </span>
+                </motion.span>
               )}
               <span className="flex items-center gap-1 text-xs font-medium text-foreground-subtle/70 group-hover:text-[var(--card-accent)] transition-colors duration-300">
                 <span>View project</span>
-                <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="w-3.5 h-3.5 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-110" />
               </span>
             </div>
           </div>

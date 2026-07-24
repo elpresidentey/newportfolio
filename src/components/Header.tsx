@@ -53,18 +53,26 @@ export default function Header() {
 
             <motion.button
               onClick={toggleTheme}
-              className="ml-1 p-2 rounded-full text-foreground-muted hover:text-foreground hover:bg-muted transition-all duration-300 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+              className="ml-1 p-2 rounded-full text-foreground-muted hover:text-foreground hover:bg-muted transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
               aria-label="Toggle theme"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
               whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
             >
-              {resolvedTheme === 'dark' ? (
-                <Sun className="w-3.5 h-3.5" aria-hidden="true" />
-              ) : (
-                <Moon className="w-3.5 h-3.5" aria-hidden="true" />
-              )}
+              <motion.div
+                key={resolvedTheme}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
+              >
+                {resolvedTheme === 'dark' ? (
+                  <Sun className="w-3.5 h-3.5" aria-hidden="true" />
+                ) : (
+                  <Moon className="w-3.5 h-3.5" aria-hidden="true" />
+                )}
+              </motion.div>
             </motion.button>
           </div>
         </motion.nav>

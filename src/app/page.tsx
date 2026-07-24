@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import ProjectList from '@/components/ProjectList';
 import CaseStudySection from '@/components/CaseStudySection';
 import ToolsSection from '@/components/ToolsSection';
+import Particles from '@/components/Particles';
 
 const GithubIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -150,9 +151,10 @@ export default function Page() {
         {/* Hero */}
         <section className="relative min-h-[88vh] flex items-center px-6 overflow-hidden">
           <div className="gradient-orb w-[600px] h-[600px] bg-accent -top-48 -right-48" />
-          <div className="gradient-orb w-[400px] h-[400px] bg-accent bottom-0 -left-48" style={{ opacity: 0.04 }} />
+            <div className="gradient-orb w-[400px] h-[400px] bg-accent bottom-0 -left-48" style={{ opacity: 0.04 }} />
+            <Particles />
 
-          <div className="container-main w-full relative z-10">
+            <div className="container-main w-full relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}

@@ -25,54 +25,82 @@ const LinkedinIcon = () => (
 function IntroScreen({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const ease = [0.22, 1, 0.36, 1] as const;
-  const dur = reduceMotion ? 0.01 : 0.8;
 
   useEffect(() => {
     if (reduceMotion) { onComplete(); return; }
-    const t = setTimeout(onComplete, 3000);
+    const t = setTimeout(onComplete, 5000);
     return () => clearTimeout(t);
   }, []);
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-5 bg-background"
-      exit={{ opacity: 0, scale: 0.97 }}
-      transition={{ duration: 0.5, ease }}
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 bg-background"
+      exit={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
+      transition={{ duration: 0.7, ease }}
     >
-      <div className="overflow-hidden flex">
+      {/* Background glow */}
+      <motion.div
+        className="absolute w-[400px] h-[400px] rounded-full bg-accent/5"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 2.5, ease, delay: 0.2 }}
+        style={{ filter: 'blur(60px)' }}
+      />
+
+      {/* Letters */}
+      <div className="overflow-hidden flex relative">
         {['I', 'E', 'L'].map((letter, i) => (
           <motion.span
             key={letter}
-            className="block text-[clamp(2.5rem,6vw,4rem)] font-semibold tracking-tight text-foreground"
-            initial={{ y: '120%' }}
-            animate={{ y: '0%' }}
-            transition={{ duration: dur, ease, delay: reduceMotion ? 0 : i * 0.18 }}
+            className="block text-[clamp(3rem,7vw,5rem)] font-semibold tracking-tight text-foreground"
+            initial={{ y: '150%', opacity: 0, filter: 'blur(12px)' }}
+            animate={{ y: '0%', opacity: 1, filter: 'blur(0px)' }}
+            transition={{
+              duration: 1.2,
+              ease,
+              delay: reduceMotion ? 0 : 0.4 + i * 0.28,
+            }}
           >
             {letter}
           </motion.span>
         ))}
         <motion.span
-          className="text-[clamp(2.5rem,6vw,4rem)] font-semibold tracking-tight text-accent"
-          initial={{ scale: 0, rotate: -90 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1], delay: reduceMotion ? 0 : 0.6 }}
+          className="text-[clamp(3rem,7vw,5rem)] font-semibold tracking-tight text-accent"
+          initial={{ scale: 0, rotate: -180, opacity: 0 }}
+          animate={{ scale: 1, rotate: 0, opacity: 1 }}
+          transition={{
+            duration: 0.8,
+            ease: [0.34, 1.56, 0.64, 1],
+            delay: reduceMotion ? 0 : 1.5,
+          }}
         >
           .
         </motion.span>
       </div>
 
-      <motion.div
-        className="h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent"
-        initial={{ width: 0, opacity: 0 }}
-        animate={{ width: 200, opacity: 1 }}
-        transition={{ duration: dur * 0.8, ease, delay: reduceMotion ? 0 : 1 }}
-      />
+      {/* Line + glow */}
+      <div className="relative flex items-center justify-center h-px">
+        <motion.div
+          className="h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: 260, opacity: 1 }}
+          transition={{ duration: 1.4, ease, delay: reduceMotion ? 0 : 2.1 }}
+        />
+        <motion.div
+          className="absolute w-[200px] h-6 rounded-full bg-accent/20"
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: 200, opacity: 1 }}
+          transition={{ duration: 1.4, ease, delay: reduceMotion ? 0 : 2.1 }}
+          style={{ filter: 'blur(24px)' }}
+        />
+      </div>
 
+      {/* Subtitle */}
       <motion.p
-        className="text-xs tracking-[0.12em] uppercase text-foreground-muted text-center leading-relaxed"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: dur * 0.7, ease, delay: reduceMotion ? 0 : 1.5 }}
+        className="text-xs tracking-[0.15em] uppercase text-foreground-muted text-center leading-relaxed font-medium"
+        initial={{ opacity: 0, y: 16, letterSpacing: '0.4em' }}
+        animate={{ opacity: 1, y: 0, letterSpacing: '0.12em' }}
+        transition={{ duration: 1.2, ease, delay: reduceMotion ? 0 : 2.8 }}
       >
         Frontend Engineer<span className="mx-1.5 text-foreground-subtle/30">·</span>Product Thinker<span className="mx-1.5 text-foreground-subtle/30">·</span>UX Designer
       </motion.p>

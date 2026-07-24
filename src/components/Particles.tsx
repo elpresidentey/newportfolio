@@ -18,15 +18,14 @@ export default function Particles() {
 
     let animId: number;
     let particles: Particle[] = [];
-    const COUNT = 80;
-    const CONNECT_DIST = 120;
-    const MOUSE_RADIUS = 150;
+    const COUNT = 60;
+    const CONNECT_DIST = 130;
+    const MOUSE_RADIUS = 200;
 
     function resize() {
-      if (!canvas) return;
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = canvas.offsetWidth * dpr;
-      canvas.height = canvas.offsetHeight * dpr;
+      canvas!.width = canvas!.offsetWidth * dpr;
+      canvas!.height = canvas!.offsetHeight * dpr;
       ctx!.scale(dpr, dpr);
     }
 
@@ -36,10 +35,10 @@ export default function Particles() {
       particles = Array.from({ length: COUNT }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        size: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.4 + 0.1,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: (Math.random() - 0.5) * 1.2,
+        size: Math.random() * 2 + 0.5,
+        alpha: Math.random() * 0.3 + 0.15,
       }));
     }
 
@@ -54,36 +53,34 @@ export default function Particles() {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Mouse interaction
         const dx = mx - p.x;
         const dy = my - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < MOUSE_RADIUS) {
+        if (dist < MOUSE_RADIUS && dist > 0) {
           const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
-          p.vx -= (dx / dist) * force * 0.02;
-          p.vy -= (dy / dist) * force * 0.02;
+          p.vx -= (dx / dist) * force * 0.15;
+          p.vy -= (dy / dist) * force * 0.15;
         }
+
+        p.vx += (Math.random() - 0.5) * 0.08;
+        p.vy += (Math.random() - 0.5) * 0.08;
+
+        const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (speed > 1.5) { p.vx = (p.vx / speed) * 1.5; p.vy = (p.vy / speed) * 1.5; }
 
         p.x += p.vx;
         p.y += p.vy;
 
-        // Damping
-        p.vx *= 0.99;
-        p.vy *= 0.99;
+        if (p.x < -20) p.x = w + 20;
+        if (p.x > w + 20) p.x = -20;
+        if (p.y < -20) p.y = h + 20;
+        if (p.y > h + 20) p.y = -20;
 
-        // Wrap
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
-
-        // Draw particle
         ctx!.beginPath();
         ctx!.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx!.fillStyle = `hsla(42, 96%, 50%, ${p.alpha})`;
         ctx!.fill();
 
-        // Connect
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const cdx = p.x - p2.x;
@@ -93,7 +90,7 @@ export default function Particles() {
             ctx!.beginPath();
             ctx!.moveTo(p.x, p.y);
             ctx!.lineTo(p2.x, p2.y);
-            const alpha = (1 - cd / CONNECT_DIST) * 0.12;
+            const alpha = (1 - cd / CONNECT_DIST) * 0.1;
             ctx!.strokeStyle = `hsla(42, 96%, 50%, ${alpha})`;
             ctx!.lineWidth = 0.5;
             ctx!.stroke();
@@ -112,23 +109,19 @@ export default function Particles() {
       };
     }
 
-    function onLeave() {
-      mouseRef.current = { x: -9999, y: -9999 };
-    }
+    function onResize() { resize(); init(); }
 
     resize();
     init();
     draw();
 
-    window.addEventListener('resize', () => { resize(); init(); });
-    canvas.addEventListener('mousemove', onMouse);
-    canvas.addEventListener('mouseleave', onLeave);
+    window.addEventListener('resize', onResize);
+    window.addEventListener('mousemove', onMouse);
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener('resize', resize);
-      canvas.removeEventListener('mousemove', onMouse);
-      canvas.removeEventListener('mouseleave', onLeave);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('mousemove', onMouse);
     };
   }, []);
 

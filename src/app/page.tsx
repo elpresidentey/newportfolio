@@ -156,7 +156,7 @@ export default function Page() {
                   HNG 14 · Stage 4 Finalist
                 </span>
                 <span className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-foreground-muted bg-muted border border-border/50 rounded-full">
-                  2.6 yrs · Full-Stack Web
+                  2.6 yrs · Frontend Web
                 </span>
                 <span className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-foreground-muted bg-muted border border-border/50 rounded-full">
                   Next.js · React · TypeScript

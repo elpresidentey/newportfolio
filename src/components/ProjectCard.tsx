@@ -42,68 +42,87 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         delay: reduceMotion ? 0 : index * 0.08,
       }}
       style={accentVar}
-      className="group relative bg-card border border-border/50 rounded-xl transition-all duration-300 hover:-translate-y-0.5"
+      className="group relative bg-card border border-border/50 rounded-xl transition-all duration-300 hover:-translate-y-0.5 flex flex-col p-5 sm:p-6"
     >
-      <a
-        href={project.liveUrl || project.githubUrl || '#'}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`View ${project.name} project`}
-        className="flex flex-col h-full p-5 sm:p-6 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-      >
-        {/* Category + Name + Subtitle */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: accent }}
-              />
-              <span className="text-[10px] font-medium text-foreground-subtle tracking-wide">
-                {project.category}
-              </span>
-            </div>
-            <h3 className="text-base sm:text-lg font-semibold tracking-tight text-foreground leading-snug">
-              {project.name}
-            </h3>
-            <p className="mt-1 text-sm text-foreground-muted leading-relaxed">
-              {project.subtitle}
-            </p>
-          </div>
-          <ArrowUpRight className="w-4 h-4 text-foreground-subtle/40 group-hover:text-[var(--card-accent)] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0 mt-1" />
-        </div>
-
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Tech pills + meta */}
-        <div className="mt-4 flex flex-wrap items-center gap-1.5">
-          {project.techStack.slice(0, 3).map((tech) => (
+      {/* Category + Name + Subtitle */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2">
             <span
-              key={tech}
-              className="px-2 py-0.5 text-[10px] font-mono text-foreground-subtle bg-muted/50 border border-border/30 rounded-md transition-colors duration-200 hover:border-[var(--card-accent)]/20 hover:text-[var(--card-accent)]"
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: accent }}
+            />
+            <span className="text-[10px] font-medium text-foreground-subtle tracking-wide">
+              {project.category}
+            </span>
+          </div>
+          <h3 className="text-base sm:text-lg font-semibold tracking-tight text-foreground leading-snug">
+            {project.name}
+          </h3>
+          <p className="mt-1 text-sm text-foreground-muted leading-relaxed">
+            {project.subtitle}
+          </p>
+        </div>
+        {project.liveUrl && (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`View ${project.name} live`}
+            className="shrink-0 mt-1 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
+          >
+            <ArrowUpRight className="w-4 h-4 text-foreground-subtle/40 hover:text-[var(--card-accent)] transition-all duration-300 hover:translate-x-0.5 hover:-translate-y-0.5" />
+          </a>
+        )}
+      </div>
+
+      <div className="flex-1" />
+
+      {/* Tech pills */}
+      <div className="mt-4 flex flex-wrap items-center gap-1.5">
+        {project.techStack.slice(0, 3).map((tech) => (
+          <span
+            key={tech}
+            className="px-2 py-0.5 text-[10px] font-mono text-foreground-subtle bg-muted/50 border border-border/30 rounded-md transition-colors duration-200 hover:border-[var(--card-accent)]/20 hover:text-[var(--card-accent)]"
+          >
+            {tech}
+          </span>
+        ))}
+        {project.techStack.length > 3 && (
+          <span className="px-2 py-0.5 text-[10px] font-mono text-foreground-subtle bg-muted/50 border border-border/30 rounded-md">
+            +{project.techStack.length - 3}
+          </span>
+        )}
+      </div>
+
+      <div className="mt-3 flex items-center justify-between">
+        <span className="text-[11px] text-foreground-subtle/60">{project.duration}</span>
+        <div className="flex items-center gap-2">
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View ${project.name} source code`}
+              className="text-foreground-subtle/40 hover:text-[var(--card-accent)] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
             >
-              {tech}
-            </span>
-          ))}
-          {project.techStack.length > 3 && (
-            <span className="px-2 py-0.5 text-[10px] font-mono text-foreground-subtle bg-muted/50 border border-border/30 rounded-md">
-              +{project.techStack.length - 3}
-            </span>
+              <GithubIcon />
+            </a>
+          )}
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-xs font-medium text-foreground-subtle/70 hover:text-[var(--card-accent)] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
+              aria-label={`View ${project.name} live`}
+            >
+              <span>View project</span>
+              <ArrowUpRight className="w-3.5 h-3.5 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
           )}
         </div>
-
-        <div className="mt-3 flex items-center justify-between">
-          <span className="text-[11px] text-foreground-subtle/60">{project.duration}</span>
-          <div className="flex items-center gap-2">
-            {project.githubUrl && (
-              <span className="text-foreground-subtle/40 hover:text-[var(--card-accent)] transition-colors duration-200" aria-label="Source code">
-                <GithubIcon />
-              </span>
-            )}
-          </div>
-        </div>
-      </a>
+      </div>
     </motion.article>
   );
 }

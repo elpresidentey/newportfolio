@@ -1,29 +1,29 @@
 export const projectsData = [
   {
-    slug: "diasporan",
-    name: "Diasporan",
-    subtitle: "Travel Planning Platform",
-    summary: "A comprehensive travel planning application connecting diaspora communities with their home countries through curated experiences and logistics.",
-    category: "Travel & Logistics",
+    slug: "greenstone",
+    name: "Greenstone",
+    subtitle: "Premium Cannabis Dispensary",
+    summary: "A clean, modern e-commerce platform for a premium cannabis dispensary featuring age verification, product catalog, and seamless shopping experience.",
+    category: "E-Commerce",
     techStack: ["React", "Next.js", "TypeScript", "TailwindCSS", "Framer Motion"],
     role: "Frontend Developer",
     duration: "2 Months",
-    problem: "Diaspora communities struggle to find authentic travel experiences and reliable logistics when visiting their home countries.",
-    solution: "Built a platform that connects travelers with local guides, authentic experiences, and reliable transportation services.",
-    challenges: "Integrating multiple third-party APIs for booking and logistics while maintaining a seamless user experience.",
+    problem: "Cannabis dispensaries need an online presence that balances regulatory compliance with a premium, trustworthy shopping experience.",
+    solution: "Built a compliant yet elegant storefront with age-gated entry, clear product categorization, and a calm, confident design language.",
+    challenges: "Implementing age verification while maintaining UX flow, and designing for a regulated industry without feeling restrictive.",
     features: [
-      "Curated Travel Experiences",
-      "Local Guide Integration",
-      "Multi-city Itinerary Planning",
-      "Real-time Booking System"
+      "Age Verification Gate",
+      "Product Catalog with Categories",
+      "Shopping Cart & Checkout",
+      "Responsive Storefront"
     ],
-    liveUrl: "https://diasporan.vercel.app",
-    githubUrl: "https://github.com/elpresidentey/DIASPORAN.git",
-    imageUrl: "/images/projects/diasporan.png",
+    liveUrl: "https://greenery-five.vercel.app",
+    githubUrl: "https://github.com/elpresidentey/greenstone.git",
+    imageUrl: "/images/projects/greenstone.png",
     stats: [
-      { label: "User Satisfaction", value: "4.8/5" },
-      { label: "Booking Success", value: "95%" },
-      { label: "Active Users", value: "2,000+" }
+      { label: "Product SKUs", value: "200+" },
+      { label: "Avg Session", value: "3:45" },
+      { label: "Page Load", value: "0.8s" }
     ]
   },
   {

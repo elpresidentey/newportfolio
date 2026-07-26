@@ -10,6 +10,7 @@ import ProjectList from '@/components/ProjectList';
 import CaseStudySection from '@/components/CaseStudySection';
 import ToolsSection from '@/components/ToolsSection';
 import Particles from '@/components/Particles';
+import ContactForm from '@/components/ContactForm';
 
 const GithubIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -292,13 +293,15 @@ export default function Page() {
             </motion.div>
 
             <motion.div
-              className="mt-10 space-y-6"
+              className="mt-10 max-w-lg"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: reduceMotion ? 0.01 : 0.8, ease, delay: 0.1 }}
             >
-              <div className="flex flex-wrap items-center gap-3">
+              <ContactForm />
+
+              <div className="mt-8 space-y-6">
                 <motion.a
                   href="mailto:conceptsandcontexts@gmail.com"
                   className="btn btn-primary"

@@ -1,9 +1,21 @@
 'use client';
 
-import { useRef } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import ProjectCard from './ProjectCard';
+import { useRef } from 'react';
+import BentoCard from './BentoCard';
 import { projectsData } from '@/lib/projects-data';
+
+type LayoutKey = 'large' | 'small';
+
+const layoutMap: LayoutKey[] = [
+  'large',
+  'small',
+  'small',
+  'small',
+  'small',
+  'small',
+  'small',
+];
 
 export default function ProjectList() {
   const reduceMotion = useReducedMotion();
@@ -26,13 +38,18 @@ export default function ProjectList() {
           <span className="section-label">Featured Work</span>
           <h2 className="section-title">Projects</h2>
           <p className="section-desc max-w-lg">
-            Products I&apos;ve designed and built from concept to production — spanning travel, e-commerce, fintech, and enterprise tools.
+            Products I&apos;ve designed and built from concept to production — spanning automotive, e-commerce, logistics, and enterprise tools.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr">
           {projectsData.map((project, i) => (
-            <ProjectCard key={project.slug} project={project} index={i} />
+            <BentoCard
+              key={project.slug}
+              project={project}
+              layout={layoutMap[i]}
+              index={i}
+            />
           ))}
         </div>
       </div>

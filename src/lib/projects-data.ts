@@ -1,29 +1,29 @@
 export const projectsData = [
   {
-    slug: "greenstone",
-    name: "Greenstone",
-    subtitle: "Premium Cannabis Dispensary",
-    summary: "A clean, modern e-commerce platform for a premium cannabis dispensary featuring age verification, product catalog, and seamless shopping experience.",
-    category: "E-Commerce",
-    techStack: ["React", "Next.js", "TypeScript", "TailwindCSS", "Framer Motion"],
+    slug: "dyaspora",
+    name: "Dyaspora",
+    subtitle: "Homecoming Travel Platform",
+    summary: "A pan-African homecoming platform that unifies flights, stays, events, and experiences into one journey — built for the diaspora planning their way back home.",
+    category: "Travel & Logistics",
+    techStack: ["React", "Next.js", "TypeScript", "TailwindCSS", "Prisma"],
     role: "Frontend Developer",
     duration: "2 Months",
-    problem: "Cannabis dispensaries need an online presence that balances regulatory compliance with a premium, trustworthy shopping experience.",
-    solution: "Built a compliant yet elegant storefront with age-gated entry, clear product categorization, and a calm, confident design language.",
-    challenges: "Implementing age verification while maintaining UX flow, and designing for a regulated industry without feeling restrictive.",
+    problem: "Africans abroad face a fragmented, stressful process when planning a trip home — flights, accommodation, events, and transport scattered across dozens of sites and word-of-mouth.",
+    solution: "Built a homecoming platform that brings flights, short-lets, cultural events, and curated destination guides into a single experience, covering 50+ cities across the continent.",
+    challenges: "Designing an emotionally resonant experience that feels like home rather than a generic travel site, while organizing multi-city inventory across destinations from Lagos to Cape Town.",
     features: [
-      "Age Verification Gate",
-      "Product Catalog with Categories",
-      "Shopping Cart & Checkout",
-      "Responsive Storefront"
+      "Flight Search & Booking",
+      "Stays: Hotels & Short-lets",
+      "Events & Cultural Experiences",
+      "Pan-African Destination Guides"
     ],
-    liveUrl: "https://greenery-five.vercel.app",
-    githubUrl: "https://github.com/elpresidentey/greenstone.git",
-    imageUrl: "/images/projects/greenstone.png",
+    liveUrl: "https://dyaspora-one.vercel.app",
+    githubUrl: "https://github.com/elpresidentey/dyaspora.git",
+    imageUrl: "/images/projects/dyaspora.png",
     stats: [
-      { label: "Product SKUs", value: "200+" },
-      { label: "Avg Session", value: "3:45" },
-      { label: "Page Load", value: "0.8s" }
+      { label: "Cities Covered", value: "50+" },
+      { label: "Booking Categories", value: "6" },
+      { label: "Support", value: "24/7" }
     ]
   },
   {
@@ -161,4 +161,31 @@ export const projectsData = [
       { label: "Drop Success", value: "100%" }
     ]
   },
-];
+  {
+    slug: "mexcon-autos",
+    name: "Mexcon Autos",
+    subtitle: "Auto Parts Catalogue PWA",
+    summary: "A progressive web app for a Lagos-based auto parts dealer — customers find genuine Japanese and Korean spare parts by vehicle and request quotes instantly.",
+    category: "Automotive",
+    techStack: ["React", "TypeScript", "Vite", "TailwindCSS", "Supabase"],
+    role: "Frontend Developer",
+    duration: "Ongoing",
+    problem: "Sourcing the right spare part for a specific vehicle means flipping through paper catalogues or calling shops one by one — slow, error-prone, and frustrating for both customers and dealers.",
+    solution: "Built a PWA with cascading vehicle-based search (Manufacturer → Model → Year → Engine → Category), product pages with compatibility info, and a quote-request flow wired to WhatsApp — backed by a Supabase admin dashboard with role-based access control.",
+    challenges: "Modelling deep vehicle compatibility data, keeping a client-rendered SPA discoverable through structured data and SEO metadata, and delivering PWA-grade performance on low-bandwidth mobile networks.",
+    features: [
+      "Cascading Vehicle-Based Search",
+      "Quote Requests with WhatsApp Integration",
+      "Installable PWA Experience",
+      "Role-Based Admin Dashboard"
+    ],
+    liveUrl: "https://mextechautospareparts.com",
+    githubUrl: "https://github.com/elpresidentey/mexcon-autos.git",
+    imageUrl: "/images/projects/mexcon.png",
+    stats: [
+      { label: "Lighthouse Score", value: "90+" },
+      { label: "Car Brands", value: "10+" },
+      { label: "Admin Roles", value: "3" }
+    ]
+  },
+  ];

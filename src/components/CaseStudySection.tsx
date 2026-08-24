@@ -13,10 +13,10 @@ const project = {
   slug: 'arms',
   name: 'ARMS',
   subtitle: 'Waste Logistics SaaS',
-  overview: 'An AI-powered SaaS platform that optimizes waste collection routes for municipalities. ARMS integrates with fill-level sensors on waste bins, dynamically adjusts collection schedules, and provides real-time fleet tracking — reducing fuel consumption, operational costs, and environmental impact.',
-  problem: 'Municipalities across Africa lose millions annually to inefficient waste collection. Trucks run empty routes, bins overflow while others are collected half-empty, and route planning relies on static schedules that don\'t reflect actual demand. The result? High operational costs, frustrated citizens, and unnecessary environmental damage.',
-  solution: 'Built a full-stack platform that ingests real-time sensor data from waste bins, runs a route optimization engine, and dispatches collection trucks with dynamically calculated routes. The system learns fill patterns over time and predicts future demand, allowing proactive rather than reactive collection.',
-  role: 'Designed and developed the frontend architecture — from the analytics dashboard and real-time fleet tracking map to the route visualization interface and cost analytics portal. Collaborated on the route optimization algorithm UI and integrated Mapbox for live tracking.',
+  overview: 'An AI-powered SaaS platform that helps municipalities collect smarter, not more often. ARMS ingests bin fill-level sensor data, dynamically rebuilds collection routes, and tracks fleets in real time — cutting fuel consumption, operational cost, and environmental impact in one continuous loop.',
+  problem: 'Municipalities across Africa lose millions every year collecting waste on guesswork. Trucks drive half-empty routes on fixed timetables while bins overflow elsewhere — because static schedules never reflect actual demand. The cost shows up in fuel bills, missed collections, and frustrated citizens.',
+  solution: 'Built a full-stack platform that turns raw sensor telemetry into dispatch decisions: fill-level data feeds a route optimization engine that recalculates truck routes as conditions change. Over time the system learns each zone\'s fill patterns and predicts demand — shifting operations from reactive to proactive.',
+  role: 'Owned the frontend architecture end-to-end: the analytics dashboard, real-time fleet tracking map, route visualization interface, and cost analytics portal. Shaped the UI around the optimization engine\'s parameters and integrated Mapbox for live fleet tracking.',
   challenges: [
     { text: 'Real-time data sync between IoT sensors and the dashboard with sub-second latency', icon: Activity },
     { text: 'Visualizing complex multi-vehicle routes on an interactive map without performance degradation', icon: MapPin },
@@ -80,20 +80,12 @@ function AnimatedStat({ value, label, icon: Icon }: { value: string; label: stri
 
   return (
     <div ref={ref} className="text-center sm:text-left group">
-      <motion.div
-        className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent mb-3"
-        whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
-        transition={{ duration: 0.3 }}
-      >
+      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent mb-3 group-hover:scale-110 transition-transform duration-300">
         <Icon className="w-5 h-5" />
-      </motion.div>
-      <motion.span
-        className="block text-3xl sm:text-4xl font-bold tracking-tight text-foreground"
-        whileHover={{ scale: 1.04 }}
-        transition={{ duration: 0.2 }}
-      >
+      </div>
+      <span className="block text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
         {sign}{displayed}{suffix}
-      </motion.span>
+      </span>
       <span className="block mt-1 text-xs font-medium text-foreground-muted">{label}</span>
     </div>
   );
@@ -131,8 +123,7 @@ export default function CaseStudySection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: reduceMotion ? 0.01 : 0.6, ease }}
-            whileHover={{ scale: 1.005 }}
-            className="relative overflow-hidden bg-gradient-to-br from-accent/10 via-accent/5 to-background border border-accent/15 rounded-2xl p-8 sm:p-12 transition-shadow duration-300 hover:shadow-[0_8px_32px_rgba(245,158,11,0.06)]"
+            className="relative overflow-hidden bg-gradient-to-br from-accent/10 via-accent/5 to-background border border-accent/15 rounded-2xl p-8 sm:p-12"
           >
             <div className="gradient-orb w-64 h-64 bg-accent -top-20 -right-20 opacity-20" />
             <div className="relative z-10">

@@ -37,23 +37,33 @@ const weatherIcons: Record<number, React.ElementType> = {
 
 
 
-async function getLocation(): Promise<{ lat: number; lon: number }> {
-  try {
-    const res = await fetch('https://ipapi.co/json/');
-    const data = await res.json();
-    return { lat: data.latitude ?? 6.5244, lon: data.longitude ?? 3.3792 };
-  } catch {
-    return { lat: 6.5244, lon: 3.3792 };
-  }
-}
+const DEFAULT_LOCATION = { lat: 6.5244, lon: 3.3792, city: 'Lagos' };
 
-async function getCity(lat: number, lon: number): Promise<string> {
+// Resolve the visitor's city + coordinates without a reverse-geocode service.
+// ipapi.co returns `city` directly; ipwho.is is a CORS-friendly fallback.
+// (Nominatim is intentionally avoided — it blocks browser requests that can't
+// set a User-Agent header, which previously left location as "Unknown".)
+async function fetchLocation(): Promise<{ lat: number; lon: number; city: string }> {
+  const tryProvider = async (url: string) => {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const d = await res.json();
+    if (d.error) throw new Error(String(d.error));
+    const lat = Number(d.latitude ?? d.lat);
+    const lon = Number(d.longitude ?? d.lon);
+    const city = d.city || d.region || DEFAULT_LOCATION.city;
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) throw new Error('no coords');
+    return { lat, lon, city };
+  };
+
   try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=10`);
-    const data = await res.json();
-    return data.address?.city || data.address?.town || data.address?.state || 'Unknown';
+    return await tryProvider('https://ipapi.co/json/');
   } catch {
-    return 'Unknown';
+    try {
+      return await tryProvider('https://ipwho.is/');
+    } catch {
+      return DEFAULT_LOCATION;
+    }
   }
 }
 
@@ -68,11 +78,10 @@ export default function WeatherWidget() {
 
     async function fetchWeather() {
       try {
-        const { lat, lon } = await getLocation();
-        const [weatherRes, city] = await Promise.all([
-          fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code&timezone=auto`),
-          getCity(lat, lon),
-        ]);
+        const loc = await fetchLocation();
+        const weatherRes = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current=temperature_2m,apparent_temperature,weather_code&timezone=auto`,
+        );
         const data = await weatherRes.json();
 
         if (!mounted) return;
@@ -81,7 +90,7 @@ export default function WeatherWidget() {
           temp: Math.round(data.current.temperature_2m),
           feelsLike: Math.round(data.current.apparent_temperature),
           code: data.current.weather_code,
-          location: city,
+          location: loc.city,
         });
       } catch {
         if (mounted) setError(true);
@@ -103,7 +112,7 @@ export default function WeatherWidget() {
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reduceMotion ? 0.01 : 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-      className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-center h-9 border-b border-border/40 bg-background/80 backdrop-blur-sm"
+      className="pointer-events-none fixed top-0 left-0 right-0 z-[60] flex items-center justify-center h-[calc(var(--weather-bar-h)+env(safe-area-inset-top,0px))] pt-[env(safe-area-inset-top,0px)] border-b border-border/40 bg-background/80 backdrop-blur-sm"
     >
       {loading ? (
         <Loader2 className="w-3 h-3 text-foreground-subtle animate-spin" />

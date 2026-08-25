@@ -29,7 +29,7 @@ export default function ProjectList() {
   const headingY = useTransform(scrollYProgress, [0, 0.15], [24, 0]);
 
   return (
-    <section id="work" ref={sectionRef} className="py-24 sm:py-32 px-6">
+    <section id="work" ref={sectionRef} className="scroll-mt-[var(--hero-offset)] py-24 sm:py-32 px-6">
       <div className="container-main">
         <motion.div
           style={{ opacity: headingOpacity, y: reduceMotion ? 0 : headingY }}

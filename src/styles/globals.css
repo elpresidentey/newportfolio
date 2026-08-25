@@ -68,6 +68,12 @@
     scroll-behavior: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Weather bar + floating nav so in-page anchors and the hero clear the chrome */
+    --weather-bar-h: 2.25rem;
+    --header-stack-top: calc(var(--weather-bar-h) + env(safe-area-inset-top, 0px));
+    --nav-clearance: 5.75rem;
+    --hero-offset: calc(var(--header-stack-top) + var(--nav-clearance));
+    scroll-padding-top: var(--hero-offset);
   }
 
   body {

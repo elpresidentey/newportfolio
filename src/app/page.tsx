@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import Lenis from 'lenis';
 import Header from '@/components/Header';
@@ -22,57 +22,197 @@ const LinkedinIcon = () => (
   </svg>
 );
 
+// Optional intro video. Drop a file at public/intro.mp4 and set VIDEO_SRC to
+// enable it. When null (default), the text animation is used. Video errors
+// gracefully fall back to the text timers.
+const VIDEO_SRC: string | null = null;
+
 function IntroScreen({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const ease = [0.22, 1, 0.36, 1] as const;
-  const dur = reduceMotion ? 0.01 : 1.5;
+  const dur = reduceMotion ? 0.01 : 1.2;
+  const [fading, setFading] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(!VIDEO_SRC);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const completedRef = useRef(false);
+
+  const safeComplete = useCallback(() => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    onComplete();
+  }, [onComplete]);
+
+  // Timer-based completion — reliable, never depends on animation callbacks.
+  useEffect(() => {
+    const HOLD = reduceMotion ? 400 : VIDEO_SRC && !videoFailed ? 6000 : 2200;
+    const FADE = reduceMotion ? 200 : 500;
+    const fadeTimer = setTimeout(() => setFading(true), HOLD);
+    const doneTimer = setTimeout(safeComplete, HOLD + FADE);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(doneTimer);
+    };
+  }, [reduceMotion, safeComplete, videoFailed]);
+
+  // Attempt muted autoplay; on failure fall back to text timers.
+  useEffect(() => {
+    if (!VIDEO_SRC || videoFailed) return;
+    const v = videoRef.current;
+    if (!v) return;
+    const p = v.play();
+    if (p) p.catch(() => setVideoFailed(true));
+  }, [videoFailed]);
+
+  const handleSkip = useCallback(() => {
+    if (completedRef.current) return;
+    setFading(true);
+    setTimeout(safeComplete, 260);
+  }, [safeComplete]);
+
+  // Skip with Esc / Enter / Space
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleSkip();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [handleSkip]);
+
+  const showVideo = !!VIDEO_SRC && !videoFailed;
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-background"
+      className="fixed inset-0 z-[9999] flex h-[100dvh] w-full flex-col items-center justify-center bg-background px-6"
       exit={{ opacity: 0 }}
       transition={{ duration: reduceMotion ? 0.01 : 0.5, ease }}
+      style={{
+        opacity: fading ? 0 : 1,
+        transition: `opacity ${reduceMotion ? 0.2 : 0.5}s cubic-bezier(0.22,1,0.36,1)`,
+        pointerEvents: fading ? 'none' : 'auto',
+        paddingTop: 'max(4rem, env(safe-area-inset-top, 0px))',
+        paddingBottom: 'max(4rem, env(safe-area-inset-bottom, 0px))',
+      }}
+      onClick={handleSkip}
     >
-      <div className="overflow-hidden">
-        <motion.span
-          className="block text-[clamp(28px,5vw,48px)] font-medium tracking-tight text-foreground"
-          initial={{ y: '110%' }}
-          animate={{ y: '0%' }}
-          transition={{ duration: dur, ease }}
-          onAnimationComplete={onComplete}
+      {showVideo && (
+        <video
+          ref={videoRef}
+          src={VIDEO_SRC!}
+          muted
+          playsInline
+          autoPlay
+          preload="auto"
+          onEnded={handleSkip}
+          onError={() => setVideoFailed(true)}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+
+      <div
+        className={`relative flex w-full max-w-md flex-col items-center gap-4 sm:gap-5 ${
+          showVideo
+            ? 'bg-background/70 backdrop-blur-sm px-5 py-6 sm:px-8 rounded-2xl'
+            : 'px-1'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <motion.span
+            className="block text-[clamp(2rem,10vw,3rem)] font-medium tracking-tight text-foreground"
+            initial={{ y: '110%' }}
+            animate={{ y: '0%' }}
+            transition={{ duration: dur, ease }}
+          >
+            IEL<span className="text-accent">.</span>
+          </motion.span>
+        </div>
+
+        <motion.div
+          className="h-px bg-foreground"
+          initial={{ width: 0 }}
+          animate={{ width: 'min(12.5rem, 55vw)' }}
+          transition={{ duration: dur, ease, delay: reduceMotion ? 0 : 0.3 }}
+        />
+
+        <motion.p
+          className="w-full max-w-[18rem] sm:max-w-sm text-center text-[10px] sm:text-xs leading-relaxed tracking-[0.08em] sm:tracking-[0.12em] uppercase text-foreground-muted px-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: reduceMotion ? 0.01 : 1.0, ease, delay: reduceMotion ? 0 : 0.7 }}
         >
-          IEL<span className="text-accent">.</span>
-        </motion.span>
+          <span className="flex flex-col gap-1 sm:hidden">
+            <span>Frontend Engineer</span>
+            <span>Product Thinker</span>
+            <span>User Experience Designer</span>
+          </span>
+          <span className="hidden sm:inline">
+            Frontend Engineer, Product Thinker and User Experience Designer
+          </span>
+        </motion.p>
       </div>
 
-      <motion.div
-        className="h-px bg-foreground"
-        initial={{ width: 0 }}
-        animate={{ width: 200 }}
-        transition={{ duration: dur, ease, delay: reduceMotion ? 0 : 0.3 }}
-      />
-
-      <motion.span
-        className="text-xs tracking-[0.12em] uppercase text-foreground-muted text-center"
+      <motion.button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleSkip();
+        }}
+        className="absolute left-1/2 -translate-x-1/2 text-[10px] sm:text-xs tracking-widest uppercase text-foreground-subtle hover:text-foreground-muted transition-colors px-4 py-2 rounded-full border border-border/40 bg-muted/40 backdrop-blur whitespace-nowrap"
+        style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px))' }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: reduceMotion ? 0.01 : 1.2, ease, delay: reduceMotion ? 0 : 0.8 }}
+        transition={{ delay: reduceMotion ? 0 : 1.2, duration: 0.6 }}
+        aria-label="Skip intro"
       >
-        Frontend Engineer, Product Thinker and User Experience Designer
-      </motion.span>
+        <span className="sm:hidden">Tap to skip</span>
+        <span className="hidden sm:inline">Skip — press Esc</span>
+      </motion.button>
     </motion.div>
   );
 }
 
 export default function Page() {
-  const [introDone, setIntroDone] = useState(false);
+  // null = still checking sessionStorage (avoid intro/content flash)
+  const [showIntro, setShowIntro] = useState<boolean | null>(null);
   const reduceMotion = useReducedMotion();
   const rafId = useRef<number | null>(null);
+  const introDone = showIntro === false;
+
+  // Show the intro once per session. ?intro=0 forces skip, ?intro=1 forces it.
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('intro') === '0') {
+        setShowIntro(false);
+        return;
+      }
+      if (params.get('intro') === '1') {
+        setShowIntro(true);
+        return;
+      }
+      setShowIntro(!sessionStorage.getItem('iel-intro-seen'));
+    } catch {
+      setShowIntro(true);
+    }
+  }, []);
+
+  const handleIntroDone = useCallback(() => {
+    try {
+      sessionStorage.setItem('iel-intro-seen', '1');
+    } catch {
+      /* ignore */
+    }
+    setShowIntro(false);
+  }, []);
 
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      // Keep hash targets (projects / contact) below the fixed weather + nav stack
+      anchors: { offset: -128 },
     });
 
     function raf(time: number) {
@@ -101,7 +241,17 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-background text-foreground font-sans antialiased bg-noise">
       <AnimatePresence>
-        {!introDone && <IntroScreen onComplete={() => setTimeout(() => setIntroDone(true), 3000)} />}
+        {showIntro !== false && (
+          showIntro === null ? (
+            <div
+              key="intro-gate"
+              className="fixed inset-0 z-[9999] h-[100dvh] w-full bg-background"
+              aria-hidden="true"
+            />
+          ) : (
+            <IntroScreen key="intro" onComplete={handleIntroDone} />
+          )
+        )}
       </AnimatePresence>
 
       {introDone && (
@@ -109,11 +259,13 @@ export default function Page() {
           <WeatherWidget />
           <Header />
 
-          {/* Hero */}
-          <section className="relative min-h-[88vh] flex items-center px-6 overflow-hidden">
-            {/* Background orbs */}
-            <div className="gradient-orb w-[600px] h-[600px] bg-accent -top-48 -right-48" />
-            <div className="gradient-orb w-[400px] h-[400px] bg-accent bottom-0 -left-48" style={{ opacity: 0.04 }} />
+          {/* Hero — top padding clears the fixed weather bar + nav pill */}
+          <section className="relative min-h-[100svh] flex items-start md:items-center pt-[var(--hero-offset)] pb-16 sm:pb-20">
+            {/* Background orbs (clipped independently so hero copy is never cut off) */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+              <div className="gradient-orb w-[600px] h-[600px] bg-accent -top-48 -right-48" />
+              <div className="gradient-orb w-[400px] h-[400px] bg-accent bottom-0 -left-48" style={{ opacity: 0.04 }} />
+            </div>
 
             <div className="container-main w-full relative z-10">
               <motion.div
@@ -217,7 +369,7 @@ export default function Page() {
           <div className="section-divider mx-auto max-w-5xl" />
 
           {/* Contact */}
-          <section id="contact" className="py-24 sm:py-32 px-6">
+          <section id="contact" className="scroll-mt-[var(--hero-offset)] py-24 sm:py-32 px-6">
             <div className="container-main">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

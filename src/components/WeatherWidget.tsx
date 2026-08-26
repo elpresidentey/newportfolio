@@ -9,6 +9,7 @@ interface WeatherData {
   feelsLike: number;
   code: number;
   location: string;
+  precise: boolean;
 }
 
 const weatherIcons: Record<number, React.ElementType> = {
@@ -35,34 +36,60 @@ const weatherIcons: Record<number, React.ElementType> = {
   99: CloudLightning,
 };
 
-
-
 const DEFAULT_LOCATION = { lat: 6.5244, lon: 3.3792, city: 'Lagos' };
 
-// Resolve the visitor's city + coordinates without a reverse-geocode service.
-// ipapi.co returns `city` directly; ipwho.is is a CORS-friendly fallback.
-// (Nominatim is intentionally avoided — it blocks browser requests that can't
-// set a User-Agent header, which previously left location as "Unknown".)
-async function fetchLocation(): Promise<{ lat: number; lon: number; city: string }> {
-  const tryProvider = async (url: string) => {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const d = await res.json();
-    if (d.error) throw new Error(String(d.error));
-    const lat = Number(d.latitude ?? d.lat);
-    const lon = Number(d.longitude ?? d.lon);
-    const city = d.city || d.region || DEFAULT_LOCATION.city;
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) throw new Error('no coords');
-    return { lat, lon, city };
-  };
-
+async function reverseGeocode(lat: number, lon: number): Promise<string> {
   try {
-    return await tryProvider('https://ipapi.co/json/');
+    const res = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`,
+      { cache: 'no-store' }
+    );
+    if (!res.ok) throw new Error('reverse failed');
+    const d = await res.json();
+    return d.city || d.locality || d.principalSubdivision || DEFAULT_LOCATION.city;
   } catch {
+    return DEFAULT_LOCATION.city;
+  }
+}
+
+function getBrowserCoords(): Promise<{ lat: number; lon: number }> {
+  return new Promise((resolve, reject) => {
+    if (!('geolocation' in navigator)) return reject(new Error('no geolocation'));
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+      (err) => reject(err),
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 600000 }
+    );
+  });
+}
+
+async function fetchLocation(): Promise<{ lat: number; lon: number; city: string; precise: boolean }> {
+  // 1) Try precise browser geolocation first
+  try {
+    const coords = await getBrowserCoords();
+    const city = await reverseGeocode(coords.lat, coords.lon);
+    return { ...coords, city, precise: true };
+  } catch {
+    // 2) Fallback to IP-based providers (approximate)
+    const tryProvider = async (url: string) => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const d = await res.json();
+      if (d.error) throw new Error(String(d.error));
+      const lat = Number(d.latitude ?? d.lat);
+      const lon = Number(d.longitude ?? d.lon);
+      const city = d.city || d.region || DEFAULT_LOCATION.city;
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) throw new Error('no coords');
+      return { lat, lon, city, precise: false };
+    };
     try {
-      return await tryProvider('https://ipwho.is/');
+      return await tryProvider('https://ipapi.co/json/');
     } catch {
-      return DEFAULT_LOCATION;
+      try {
+        return await tryProvider('https://ipwho.is/');
+      } catch {
+        return { ...DEFAULT_LOCATION, precise: false };
+      }
     }
   }
 }
@@ -81,6 +108,7 @@ export default function WeatherWidget() {
         const loc = await fetchLocation();
         const weatherRes = await fetch(
           `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current=temperature_2m,apparent_temperature,weather_code&timezone=auto`,
+          { cache: 'no-store' }
         );
         const data = await weatherRes.json();
 
@@ -91,6 +119,7 @@ export default function WeatherWidget() {
           feelsLike: Math.round(data.current.apparent_temperature),
           code: data.current.weather_code,
           location: loc.city,
+          precise: loc.precise,
         });
       } catch {
         if (mounted) setError(true);
@@ -117,10 +146,11 @@ export default function WeatherWidget() {
       {loading ? (
         <Loader2 className="w-3 h-3 text-foreground-subtle animate-spin" />
       ) : weather ? (
-        <div className="flex items-center gap-4 text-[11px] text-foreground-subtle font-medium">
-          <span className="flex items-center gap-1.5">
-            <MapPin className="w-3 h-3 text-accent" />
+        <div className="flex items-center gap-3 sm:gap-4 text-[11px] text-foreground-subtle font-medium">
+          <span className="flex items-center gap-1.5" title={weather.precise ? 'Precise location (GPS)' : 'Approximate location (IP)'}>
+            <MapPin className={`w-3 h-3 ${weather.precise ? 'text-accent' : 'text-foreground-subtle'}`} />
             {weather.location}
+            {!weather.precise && <span className="hidden sm:inline text-[10px] text-foreground-subtle/60">· approx.</span>}
           </span>
           <span className="flex items-center gap-1.5">
             <WeatherIcon className="w-3.5 h-3.5 text-accent" />
@@ -129,7 +159,6 @@ export default function WeatherWidget() {
           <span className="hidden sm:inline text-foreground-subtle/60">
             Feels like {weather.feelsLike}°C
           </span>
-          <span className="hidden sm:inline text-foreground-subtle/60" />
         </div>
       ) : null}
     </motion.div>

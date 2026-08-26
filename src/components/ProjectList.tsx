@@ -44,7 +44,7 @@ export default function ProjectList() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr items-stretch">
           {projectsData.map((project, i) => (
             <BentoCard
               key={project.slug}

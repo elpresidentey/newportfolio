@@ -1,8 +1,9 @@
 'use client';
 
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import BentoCard from './BentoCard';
+import { ProjectDetailModal } from './ProjectDetailModal';
 import { projectsData } from '@/lib/projects-data';
 
 type LayoutKey = 'large' | 'small';
@@ -19,6 +20,7 @@ const layoutMap: LayoutKey[] = [
 
 export default function ProjectList() {
   const reduceMotion = useReducedMotion();
+  const [selected, setSelected] = useState<(typeof projectsData)[0] | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -49,10 +51,12 @@ export default function ProjectList() {
               project={project}
               layout={layoutMap[i]}
               index={i}
+              onSelect={setSelected}
             />
           ))}
         </div>
       </div>
+      <ProjectDetailModal project={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }

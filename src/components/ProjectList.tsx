@@ -9,10 +9,10 @@ import { projectsData } from '@/lib/projects-data';
 type LayoutKey = 'large' | 'small';
 
 const layoutMap: LayoutKey[] = [
+  'large',
   'small',
   'small',
-  'small',
-  'small',
+  'large',
   'small',
   'small',
   'small',
@@ -44,7 +44,7 @@ export default function ProjectList() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 auto-rows-fr items-stretch lg:grid-cols-4">
           {projectsData.map((project, i) => (
             <BentoCard
               key={project.slug}

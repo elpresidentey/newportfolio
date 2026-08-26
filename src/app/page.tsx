@@ -22,18 +22,29 @@ const LinkedinIcon = () => (
   </svg>
 );
 
-// Optional intro video. Drop a file at public/intro.mp4 and set VIDEO_SRC to
-// enable it. When null (default), the text animation is used. Video errors
-// gracefully fall back to the text timers.
-const VIDEO_SRC: string | null = null;
+// Deterministic pseudo-random particles (stable between renders, no hydration mismatch)
+const PARTICLES = Array.from({ length: 22 }, (_, i) => {
+  const r = (n: number) => {
+    const x = Math.sin(i * 127.1 + n * 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  };
+  return {
+    x: r(1) * 100,
+    y: r(2) * 100,
+    size: 2 + r(3) * 4,
+    delay: r(4) * 1.5,
+    dur: 3.5 + r(5) * 3,
+    drift: 24 + r(6) * 48,
+  };
+});
+
+const WORDMARK = ['I', 'E', 'L', '.'];
 
 function IntroScreen({ onComplete }: { onComplete: () => void }) {
   const reduceMotion = useReducedMotion();
   const ease = [0.22, 1, 0.36, 1] as const;
-  const dur = reduceMotion ? 0.01 : 1.2;
   const [fading, setFading] = useState(false);
-  const [videoFailed, setVideoFailed] = useState(!VIDEO_SRC);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [phase, setPhase] = useState(reduceMotion ? 2 : 0);
   const completedRef = useRef(false);
 
   const safeComplete = useCallback(() => {
@@ -42,9 +53,23 @@ function IntroScreen({ onComplete }: { onComplete: () => void }) {
     onComplete();
   }, [onComplete]);
 
+  // Phase 0: logo draw-in → Phase 1: letters fly in → Phase 2: divider + subtitle
+  useEffect(() => {
+    if (reduceMotion) {
+      setPhase(2);
+      return;
+    }
+    const t1 = setTimeout(() => setPhase(1), 1100);
+    const t2 = setTimeout(() => setPhase(2), 2000);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [reduceMotion]);
+
   // Timer-based completion — reliable, never depends on animation callbacks.
   useEffect(() => {
-    const HOLD = reduceMotion ? 400 : VIDEO_SRC && !videoFailed ? 6000 : 2200;
+    const HOLD = reduceMotion ? 400 : 3600;
     const FADE = reduceMotion ? 200 : 500;
     const fadeTimer = setTimeout(() => setFading(true), HOLD);
     const doneTimer = setTimeout(safeComplete, HOLD + FADE);
@@ -52,16 +77,7 @@ function IntroScreen({ onComplete }: { onComplete: () => void }) {
       clearTimeout(fadeTimer);
       clearTimeout(doneTimer);
     };
-  }, [reduceMotion, safeComplete, videoFailed]);
-
-  // Attempt muted autoplay; on failure fall back to text timers.
-  useEffect(() => {
-    if (!VIDEO_SRC || videoFailed) return;
-    const v = videoRef.current;
-    if (!v) return;
-    const p = v.play();
-    if (p) p.catch(() => setVideoFailed(true));
-  }, [videoFailed]);
+  }, [reduceMotion, safeComplete]);
 
   const handleSkip = useCallback(() => {
     if (completedRef.current) return;
@@ -81,11 +97,9 @@ function IntroScreen({ onComplete }: { onComplete: () => void }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [handleSkip]);
 
-  const showVideo = !!VIDEO_SRC && !videoFailed;
-
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] flex h-[100dvh] w-full flex-col items-center justify-center bg-background px-6"
+      className="fixed inset-0 z-[9999] flex h-[100dvh] w-full flex-col items-center justify-center overflow-hidden bg-background px-6"
       exit={{ opacity: 0 }}
       transition={{ duration: reduceMotion ? 0.01 : 0.5, ease }}
       style={{
@@ -97,50 +111,113 @@ function IntroScreen({ onComplete }: { onComplete: () => void }) {
       }}
       onClick={handleSkip}
     >
-      {showVideo && (
-        <video
-          ref={videoRef}
-          src={VIDEO_SRC!}
-          muted
-          playsInline
-          autoPlay
-          preload="auto"
-          onEnded={handleSkip}
-          onError={() => setVideoFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      )}
-
-      <div
-        className={`relative flex w-full max-w-md flex-col items-center gap-4 sm:gap-5 ${
-          showVideo
-            ? 'bg-background/70 backdrop-blur-sm px-5 py-6 sm:px-8 rounded-2xl'
-            : 'px-1'
-        }`}
-      >
-        <div className="overflow-hidden">
+      {/* Particle + geometric background */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        {PARTICLES.map((p, i) => (
           <motion.span
-            className="block text-[clamp(2rem,10vw,3rem)] font-medium tracking-tight text-foreground"
-            initial={{ y: '110%' }}
-            animate={{ y: '0%' }}
-            transition={{ duration: dur, ease }}
-          >
-            IEL<span className="text-accent">.</span>
-          </motion.span>
+            key={i}
+            className="absolute rounded-full bg-accent"
+            style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size }}
+            initial={{ opacity: 0 }}
+            animate={
+              reduceMotion
+                ? { opacity: 0.15 }
+                : { opacity: [0, 0.45, 0.1], y: [0, -p.drift, -p.drift * 1.6] }
+            }
+            transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        ))}
+        <motion.div
+          className="absolute left-1/2 top-1/2 -ml-[min(300px,45vw)] -mt-[min(300px,45vw)] h-[min(600px,90vw)] w-[min(600px,90vw)] rounded-full border border-border"
+          animate={reduceMotion ? {} : { rotate: 360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+        >
+          <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/60" />
+        </motion.div>
+        <motion.div
+          className="absolute left-1/2 top-1/2 -ml-[min(220px,34vw)] -mt-[min(220px,34vw)] h-[min(440px,68vw)] w-[min(440px,68vw)] border border-accent/10"
+          animate={reduceMotion ? {} : { rotate: 45 }}
+          transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
+        />
+      </div>
+
+      <div className="relative flex w-full max-w-md flex-col items-center gap-4 sm:gap-5">
+        <div className="relative flex h-[clamp(3.5rem,15vw,4.5rem)] w-full items-center justify-center">
+          {/* Phase 0 — logo mark draws itself, then blurs out */}
+          <AnimatePresence>
+            {phase === 0 && !reduceMotion && (
+              <motion.div
+                key="intro-logo"
+                className="absolute"
+                exit={{ scale: 1.5, opacity: 0, filter: 'blur(8px)' }}
+                transition={{ duration: 0.45, ease }}
+              >
+                <svg width="88" height="88" viewBox="0 0 88 88" fill="none" aria-label="IEL logo">
+                  <motion.rect
+                    x="6"
+                    y="6"
+                    width="76"
+                    height="76"
+                    rx="18"
+                    stroke="var(--color-foreground)"
+                    strokeWidth="2"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 0.9, ease }}
+                  />
+                  <motion.path
+                    d="M33 29h22M44 29v30M33 59h22"
+                    stroke="var(--color-accent)"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 0.7, ease, delay: 0.35 }}
+                  />
+                </svg>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Phase 1 — letters fly in individually */}
+          <div className="overflow-hidden px-2">
+            <div className="flex">
+              {WORDMARK.map((ch, i) => (
+                <motion.span
+                  key={i}
+                  className={`block text-[clamp(2rem,10vw,3rem)] font-medium tracking-tight ${
+                    ch === '.' ? 'text-accent' : 'text-foreground'
+                  }`}
+                  initial={reduceMotion ? { opacity: 1 } : { y: '120%', opacity: 0, rotate: 8 }}
+                  animate={
+                    phase >= 1
+                      ? reduceMotion
+                        ? { opacity: 1 }
+                        : { y: '0%', opacity: 1, rotate: 0 }
+                      : {}
+                  }
+                  transition={{ duration: 0.7, ease, delay: reduceMotion ? 0 : i * 0.09 }}
+                >
+                  {ch}
+                </motion.span>
+              ))}
+            </div>
+          </div>
         </div>
 
+        {/* Phase 2 — divider expands, subtitle fades in */}
         <motion.div
           className="h-px bg-foreground"
           initial={{ width: 0 }}
-          animate={{ width: 'min(12.5rem, 55vw)' }}
-          transition={{ duration: dur, ease, delay: reduceMotion ? 0 : 0.3 }}
+          animate={phase >= 2 ? { width: 'min(12.5rem, 55vw)' } : {}}
+          transition={{ duration: reduceMotion ? 0.01 : 0.9, ease }}
         />
 
         <motion.p
           className="w-full max-w-[18rem] sm:max-w-sm text-center text-[10px] sm:text-xs leading-relaxed tracking-[0.08em] sm:tracking-[0.12em] uppercase text-foreground-muted px-1"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: reduceMotion ? 0.01 : 1.0, ease, delay: reduceMotion ? 0 : 0.7 }}
+          animate={phase >= 2 ? { opacity: 1 } : {}}
+          transition={{ duration: reduceMotion ? 0.01 : 1.0, ease }}
         >
           <span className="flex flex-col gap-1 sm:hidden">
             <span>Frontend Engineer</span>

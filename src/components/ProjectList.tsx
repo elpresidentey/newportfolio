@@ -9,7 +9,7 @@ import { projectsData } from '@/lib/projects-data';
 type LayoutKey = 'large' | 'small';
 
 const layoutMap: LayoutKey[] = [
-  'large',
+  'small',
   'small',
   'small',
   'small',

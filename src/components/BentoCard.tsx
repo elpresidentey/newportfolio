@@ -37,7 +37,8 @@ const sizeStyles: Record<LayoutSize, string> = {
 export default function BentoCard({ project, layout, index, onSelect }: BentoCardProps) {
   const reduceMotion = useReducedMotion();
   const ease = [0.22, 1, 0.36, 1] as const;
-  const isLarge = layout === 'large';
+  // Uniform cards — ignore bento size for content so dyaspora matches the rest
+  const isLarge = false;
   const accent = categoryAccents[project.category] || { color: '#f59e0b', bg: 'from-amber-500/10 via-transparent to-transparent' };
   const accentVar = { '--card-accent': accent.color } as React.CSSProperties;
 
@@ -65,7 +66,7 @@ export default function BentoCard({ project, layout, index, onSelect }: BentoCar
       role={onSelect ? 'button' : undefined}
       tabIndex={onSelect ? 0 : undefined}
       aria-label={onSelect ? `View details for ${project.name}` : undefined}
-      className={`group relative bg-card border border-border/60 transition-all duration-500 overflow-hidden flex flex-col ${sizeStyles[layout]} ${isLarge ? 'min-h-[360px] sm:min-h-[380px]' : 'min-h-[300px] sm:min-h-[340px]'} rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),0_0_0_1px_var(--card-accent)/0.2] dark:shadow-[0_1px_3px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_12px_48px_rgba(0,0,0,0.25),0_0_0_1px_var(--card-accent)/0.15] hover:-translate-y-1 cursor-pointer focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2`}
+      className={`group relative bg-card border border-border/60 transition-all duration-500 overflow-hidden flex flex-col ${sizeStyles[layout]} min-h-[340px] sm:min-h-[360px] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.1),0_0_0_1px_var(--card-accent)/0.2] dark:shadow-[0_1px_3px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_12px_48px_rgba(0,0,0,0.25),0_0_0_1px_var(--card-accent)/0.15] hover:-translate-y-1 cursor-pointer focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2`}
     >
       <div className={`absolute inset-0 bg-gradient-to-br ${accent.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-xl`} />
       <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[var(--card-accent)]/0 to-transparent group-hover:via-[var(--card-accent)]/40 transition-all duration-700" />

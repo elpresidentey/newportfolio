@@ -16,6 +16,7 @@ const layoutMap: LayoutKey[] = [
   'small',
   'small',
   'small',
+  'large',
 ];
 
 export default function ProjectList() {
@@ -49,7 +50,7 @@ export default function ProjectList() {
             <BentoCard
               key={project.slug}
               project={project}
-              layout={layoutMap[i]}
+              layout={layoutMap[i % layoutMap.length]}
               index={i}
               onSelect={setSelected}
             />

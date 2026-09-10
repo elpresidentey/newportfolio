@@ -1,5 +1,32 @@
 export const projectsData = [
   {
+    slug: "garagefit",
+    name: "GarageFit",
+    subtitle: "Car Comparison Platform",
+    summary: "A free car-comparison PWA that measures 196 vehicles against your current car, garage, and budget — with 3D garage fit, true 5-year cost, safety, efficiency and EV range.",
+    category: "Automotive",
+    techStack: ["React", "TypeScript", "Vite", "CSS", "PWA"],
+    role: "Frontend Developer",
+    duration: "2 Months",
+    problem: "Car buyers can't tell if a new car will fit their garage, lifestyle, and budget — dimensions, running costs, safety, and EV range are scattered across spec sheets.",
+    solution: "Built GarageFit to compare 196 vehicles side-by-side against your current car and garage, with 3D fit visualization, true 5-year ownership costs, and safety/efficiency breakdowns — free with no account.",
+    challenges: "Normalizing specs across 196 vehicles, rendering garage fit in 3D in the browser, and delivering an offline-first PWA that stays fast with no login friction.",
+    features: [
+      "3D Garage Fit Visualization",
+      "True 5-Year Cost Analysis",
+      "Safety, Efficiency & EV Range Compare",
+      "Offline-First PWA, No Sign-up"
+    ],
+    liveUrl: "https://garagefit.vercel.app",
+    githubUrl: "https://github.com/elpresidentey/Garagefit",
+    imageUrl: "/images/projects/garagefit.png",
+    stats: [
+      { label: "Vehicles Compared", value: "196" },
+      { label: "Cost Analysis", value: "5-Year" },
+      { label: "Access", value: "Free" }
+    ]
+  },
+  {
     slug: "dyaspora",
     name: "Dyaspora",
     subtitle: "Homecoming Travel Platform",
@@ -152,7 +179,7 @@ export const projectsData = [
       "Community Forums",
       "Size Recommendation AI"
     ],
-    liveUrl: "https://impetus-omega.vercel.app",
+    liveUrl: "https://impetuss.vercel.app/",
     githubUrl: "https://github.com/elpresidentey/impetussneakers.git",
     imageUrl: "/images/projects/impetus.png",
     stats: [

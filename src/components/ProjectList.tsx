@@ -13,9 +13,11 @@ const layoutMap: LayoutKey[] = [
   'small',
   'small',
   'large',
+  'large',
   'small',
   'small',
-  'small',
+  'large',
+  'large',
   'large',
 ];
 

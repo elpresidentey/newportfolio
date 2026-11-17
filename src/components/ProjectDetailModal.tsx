@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X, ExternalLink, Clock3, UserRound, Layers, Target, Lightbulb, Wrench, Sparkles, BarChart3 } from 'lucide-react';
 import { projectsData } from '@/lib/projects-data';
@@ -17,6 +17,8 @@ const categoryAccents: Record<string, string> = {
   'Travel & Logistics': '#06b6d4',
   'E-Commerce': '#8b5cf6',
   SaaS: '#f59e0b',
+  'Food & Beverage': '#ec4899',
+  'Interior Design': '#b08d57',
   Automotive: '#16a34a',
 };
 
@@ -24,6 +26,12 @@ export function ProjectDetailModal({ project, onClose }: { project: Project | nu
   const reduceMotion = useReducedMotion();
   const ease = [0.22, 1, 0.36, 1] as const;
   const accent = project ? categoryAccents[project.category] || '#f59e0b' : '#f59e0b';
+  const [imgFailed, setImgFailed] = useState(false);
+
+  // Reset the fallback whenever a different project opens
+  useEffect(() => {
+    setImgFailed(false);
+  }, [project]);
 
   useEffect(() => {
     if (!project) return;
@@ -72,15 +80,32 @@ export function ProjectDetailModal({ project, onClose }: { project: Project | nu
               </button>
 
               <div className="overflow-y-auto scrollbar-hide flex-1">
-                {/* Image banner */}
+                {/* Image banner — branded fallback when no screenshot exists */}
                 <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-muted border-b border-border shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={project.imageUrl}
-                    alt={`${project.name} preview`}
-                    className="h-full w-full object-cover"
-                    onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')}
-                  />
+                  {project.imageUrl && !imgFailed ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={project.imageUrl}
+                      alt={`${project.name} preview`}
+                      className="h-full w-full object-cover"
+                      onError={() => setImgFailed(true)}
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0 flex items-center justify-center overflow-hidden"
+                      style={{
+                        background: `linear-gradient(135deg, ${accent}1f 0%, transparent 55%, ${accent}0d 100%)`,
+                      }}
+                      aria-hidden="true"
+                    >
+                      <span
+                        className="select-none font-bold leading-none tracking-tighter"
+                        style={{ color: `${accent}26`, fontSize: 'clamp(6rem, 18vw, 9rem)' }}
+                      >
+                        {project.name.charAt(0)}
+                      </span>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
                     <div className="flex flex-wrap items-center gap-2 mb-2">

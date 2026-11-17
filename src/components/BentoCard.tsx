@@ -18,6 +18,8 @@ const categoryAccents: Record<string, { color: string; bg: string }> = {
   'Travel & Logistics': { color: '#06b6d4', bg: 'from-cyan-500/10 via-transparent to-transparent' },
   'E-Commerce': { color: '#8b5cf6', bg: 'from-violet-500/10 via-transparent to-transparent' },
   SaaS: { color: '#f59e0b', bg: 'from-amber-500/10 via-transparent to-transparent' },
+  'Food & Beverage': { color: '#ec4899', bg: 'from-pink-500/10 via-transparent to-transparent' },
+  'Interior Design': { color: '#b08d57', bg: 'from-[#b08d57]/10 via-transparent to-transparent' },
   'Personal Brand': { color: '#10b981', bg: 'from-emerald-500/10 via-transparent to-transparent' },
   Automotive: { color: '#16a34a', bg: 'from-green-600/10 via-transparent to-transparent' },
   'Component Library': { color: '#ec4899', bg: 'from-pink-500/10 via-transparent to-transparent' },

@@ -125,7 +125,7 @@ export const projectsData = [
       "Virtual Try-on Integration",
       "Premium Checkout Experience"
     ],
-    liveUrl: "https://amapels.vercel.app",
+    liveUrl: "https://amapelsng.com",
     githubUrl: "https://github.com/elpresidentey/amapels.git",
     imageUrl: "/images/projects/amapels.png",
     stats: [
@@ -213,6 +213,60 @@ export const projectsData = [
       { label: "Lighthouse Score", value: "90+" },
       { label: "Car Brands", value: "10+" },
       { label: "Admin Roles", value: "3" }
+    ]
+  },
+  {
+    slug: "donuts-cakes",
+    name: "Donuts & Cakes",
+    subtitle: "Dessert Studio E-commerce",
+    summary: "A Nigerian dessert studio where customers design their own cakes, donut boxes and smoothies in live builders — then bakers make exactly what they pictured, delivered nationwide.",
+    category: "Food & Beverage",
+    techStack: ["React", "Next.js", "TypeScript", "TailwindCSS"],
+    role: "Frontend Developer",
+    duration: "2 Months",
+    problem: "Dessert buyers pick from rigid menus, photos never quite match the final product, and a truly custom cake still means phone calls and guesswork.",
+    solution: "Built a dessert e-commerce with three live builders — cakes, donut boxes and smoothies — where every choice redraws the final product, plus a cart and checkout flow for nationwide delivery.",
+    challenges: "Mapping every combination of shapes, sponges, glazes and toppings to a lag-free live preview, structuring a growing multi-category catalog, and keeping checkout to a couple of minutes.",
+    features: [
+      "Live Cake Builder with Custom Wording",
+      "Donut Box & Smoothie Builders",
+      "Cart & Checkout Flow",
+      "Nationwide Delivery Tue–Sun"
+    ],
+    liveUrl: "https://donutsandcakes.vercel.app",
+    githubUrl: "https://github.com/elpresidentey/donutsandcakes.git",
+    imageUrl: "/images/projects/donutsandcakes.jpg",
+    stats: [
+      { label: "Custom Builders", value: "3" },
+      { label: "Delivery", value: "Nationwide" },
+      { label: "Fresh Baked", value: "Daily" }
+    ]
+  },
+  {
+    slug: "pjc-interiors",
+    name: "PJC Interiors",
+    subtitle: "Interior Design Business Platform",
+    summary: "A premium digital showroom for a Lagos interior studio — POP ceilings, feature walls and full interiors — with quote requests, consultation booking and a Supabase-backed lead dashboard.",
+    category: "Interior Design",
+    techStack: ["Next.js", "TypeScript", "TailwindCSS", "Supabase", "React Hook Form"],
+    role: "Full-Stack Developer",
+    duration: "2 Months",
+    problem: "A premium interior business runs on word-of-mouth: customers can't browse past work, can't get honest itemised quotes, and every enquiry lives in scattered WhatsApp chats.",
+    solution: "Delivered a digital showroom — filterable project gallery, service pages and testimonials — plus multi-step quote requests, consultation booking and WhatsApp integration, all managed from a Supabase admin dashboard.",
+    challenges: "Keeping a multi-step quote flow frictionless on Nigerian mobile networks, locking down admin routes with Supabase auth and row-level security, and keeping an image-heavy site fast on 3G/4G.",
+    features: [
+      "Multi-Step Quote Requests",
+      "Consultation Booking",
+      "Filterable Project Gallery",
+      "Supabase Admin & Lead Dashboard"
+    ],
+    liveUrl: "https://pjcinteriors.vercel.app/en",
+    githubUrl: "https://github.com/elpresidentey/PrinceJahkcrowninteriors.git",
+    imageUrl: "/images/projects/pjc-interiors.jpg",
+    stats: [
+      { label: "Spaces Transformed", value: "120+" },
+      { label: "Client Rating", value: "4.8/5" },
+      { label: "Quote Turnaround", value: "7 days" }
     ]
   },
   ];

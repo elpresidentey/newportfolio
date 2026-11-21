@@ -135,33 +135,6 @@ export const projectsData = [
     ]
   },
   {
-    slug: "insight",
-    name: "Insight for SMEs",
-    subtitle: "Business Intelligence Platform",
-    summary: "A business intelligence platform designed for small and medium enterprises to make data-driven decisions without requiring technical expertise.",
-    category: "SaaS",
-    techStack: ["React", "Next.js", "TypeScript", "TailwindCSS", "Recharts"],
-    role: "Frontend Developer",
-    duration: "3 Months",
-    problem: "SMEs lack access to affordable, user-friendly business intelligence tools to analyze their data.",
-    solution: "Created an intuitive BI platform with pre-built templates and natural language queries for data analysis.",
-    challenges: "Simplifying complex data concepts, building intuitive visualizations, and ensuring data security.",
-    features: [
-      "Natural Language Queries",
-      "Pre-built Analytics Templates",
-      "Real-time Data Sync",
-      "Collaborative Dashboards"
-    ],
-    liveUrl: "https://insight-market.vercel.app",
-    githubUrl: "https://github.com/elpresidentey/insightforsmes.git",
-    imageUrl: "/images/projects/insight.png",
-    stats: [
-      { label: "SME Clients", value: "500+" },
-      { label: "Data Processed", value: "1M+ rows" },
-      { label: "User Retention", value: "85%" }
-    ]
-  },
-  {
     slug: "impetus",
     name: "Impetus Sneakers",
     subtitle: "Streetwear E-commerce",

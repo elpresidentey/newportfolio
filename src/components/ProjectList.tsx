@@ -18,7 +18,8 @@ const layoutMap: LayoutKey[] = [
   'small',
   'large',
   'large',
-  'large',
+  'small',
+  'small',
 ];
 
 export default function ProjectList() {

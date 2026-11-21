@@ -269,4 +269,31 @@ export const projectsData = [
       { label: "Quote Turnaround", value: "7 days" }
     ]
   },
+  {
+    slug: "orbital-freight",
+    name: "Orbital Freight",
+    subtitle: "Earth Operations Monitor",
+    summary: "An installable PWA that renders global ocean freight on a real-time 3D Earth — nine trade lanes, live AIS vessels, ISS telemetry and weather/fire monitoring, with every value sourced from real data.",
+    category: "Travel & Logistics",
+    techStack: ["JavaScript", "Three.js", "PWA", "Vercel Functions", "NASA/JPL"],
+    role: "Full-Stack Developer",
+    duration: "2 Months",
+    problem: "Global shipping is invisible in real time — vessel positions, port weather and orbital data live in scattered feeds, so operators have no single operational view of the ocean.",
+    solution: "Built an interactive Earth operations monitor: a three.js globe with nine great-circle trade lanes, a live vessel feed through a server-side AIS proxy, ISS telemetry propagated client-side with SGP4, and weather, sea-state and fire layers from Open-Meteo and NASA FIRMS.",
+    challenges: "Keeping the AIS provider key server-side behind a Vercel function, propagating the ISS orbit client-side with honest fallbacks, and refusing to display invented values — anything unsourced renders as unavailable.",
+    features: [
+      "Interactive 3D Earth & Trade Lanes",
+      "Live AIS Vessels via Server Proxy",
+      "ISS Telemetry with SGP4 Propagation",
+      "Weather, Sea-State & Fire Layers"
+    ],
+    liveUrl: "https://geolocateshippingdashboard.vercel.app",
+    githubUrl: "https://github.com/elpresidentey/Geolocate.git",
+    imageUrl: "/images/projects/orbital-freight.jpg",
+    stats: [
+      { label: "Live Vessels", value: "140" },
+      { label: "Trade Lanes", value: "9" },
+      { label: "Render", value: "60 FPS" }
+    ]
+  },
   ];

@@ -179,7 +179,7 @@ export const projectsData = [
       "Community Forums",
       "Size Recommendation AI"
     ],
-    liveUrl: "https://impetuss.vercel.app/",
+    liveUrl: "https://impetus-omega.vercel.app",
     githubUrl: "https://github.com/elpresidentey/impetussneakers.git",
     imageUrl: "/images/projects/impetus.png",
     stats: [
